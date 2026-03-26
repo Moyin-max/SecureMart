@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SecureMart Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #7f1d1d;
+            border-left: 5px solid red;
+            transition: 0.3s;
+        }
+
+        .alert.ai {
+            background: #b91c1c;
+            border-left: 5px solid yellow;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .locked {
+            background: #ef4444;
+        }
+
+        .unlocked {
+            background: #22c55e;
+        }
+
+        #popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🏪 SecureMart Dashboard</h1>
+
+    <div id="popup">🚨 ALERT!</div>
+
+    <div class="grid">
+
+        <!-- Camera -->
+        <div class="card">
+            <h2>📷 Live Camera</h2>
+            <div class="camera-box">
+                <img src="https://via.placeholder.com/600x350" width="100%"
+                    style="border-radius:10px; box-shadow: 0 0 20px red;">
+                <div class="detection-box"></div>
+                <div class="label">Suspicious Activity</div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="card alerts" id="alerts">
+            <h2>🚨 Alerts</h2>
+        </div>
+
+    </div>
+
+    <!-- Door Control -->
+    <div class="card" style="margin-top:20px;">
+        <h2>🚪 Door Control</h2>
+
+        <button id="doorBtn" class="locked">Unlock Door</button>
+        <p id="status">Status: Locked 🔒</p>
+    </div>
+
+    <script>
+        const alertsDiv = document.getElementById("alerts");
+        const popup = document.getElementById("popup");
+        const doorBtn = document.getElementById("doorBtn");
+        const statusText = document.getElementById("status");
+
+        let locked = true;
+
+        // Door control
+        doorBtn.onclick = () => {
+            locked = !locked;
+
+            if (locked) {
+                doorBtn.textContent = "Unlock Door";
+                doorBtn.className = "locked";
+                statusText.textContent = "Status: Locked 🔒";
+            } else {
+                doorBtn.textContent = "Lock Door";
+                doorBtn.className = "unlocked";
+                statusText.textContent = "Status: Unlocked 🔓";
+            }
+        };
+
+        // Simulate alerts
+        setInterval(() => {
+            const isAI = Math.random() > 0.6;
+
+            const message = isAI
+                ? "🤖 Suspicious behaviour detected!"
+                : "Motion detected in store!";
+
+            const time = new Date().toLocaleTimeString();
+
+            const div = document.createElement("div");
+            div.className = "alert " + (isAI ? "ai" : "");
+            div.textContent = `${time} - ${message}`;
+
+            alertsDiv.prepend(div);
+
+            // Show popup
+            popup.textContent = "🚨 " + message;
+            popup.style.display = "block";
+
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+
+            // Play sound
+            const audio = new Audio("https://www.soundjay.com/buttons/beep-01a.mp3");
+            audio.play();
+
+        }, 4000);
+    </script>
+
+</body>
+
+</html>
