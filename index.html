@@ -2,188 +2,588 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>SecureMart Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureMart | Smart Store Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(9, 18, 35, .82);
+      --line: rgba(148, 163, 184, .18);
+      --text: #e5eefb;
+      --muted: #93a4bc;
+      --cyan: #67e8f9;
+      --teal: #14b8a6;
+      --rose: #fb7185;
+      --yellow: #fbbf24;
+      --green: #22c55e;
+      --shadow: 0 20px 50px rgba(2, 6, 23, .42)
+    }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f172a, #020617);
-            color: white;
-            padding: 20px;
-        }
+    * {
+      box-sizing: border-box
+    }
 
-        h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
+    body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, rgba(20, 184, 166, .18), transparent 24%), radial-gradient(circle at top right, rgba(56, 189, 248, .14), transparent 26%), linear-gradient(160deg, #020617, #07111f 45%, #0f172a)
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
+    .shell {
+      width: min(1180px, calc(100% - 24px));
+      margin: auto;
+      padding: 24px 0 36px
+    }
 
-        .card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        }
+    .hero,
+    .layout {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 18px
+    }
 
-        .alert {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            background: #7f1d1d;
-            border-left: 5px solid red;
-            transition: 0.3s;
-        }
+    .layout {
+      margin-top: 18px
+    }
 
-        .alert.ai {
-            background: #b91c1c;
-            border-left: 5px solid yellow;
-        }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px)
+    }
 
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            color: white;
-            transition: 0.3s;
-        }
+    .hero-copy,
+    .section,
+    .side {
+      padding: 22px
+    }
 
-        button:hover {
-            transform: scale(1.05);
-        }
+    .eyebrow,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px
+    }
 
-        .locked {
-            background: #ef4444;
-        }
+    .eyebrow {
+      padding: 8px 12px;
+      background: rgba(20, 184, 166, .12);
+      color: #99f6e4;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
 
-        .unlocked {
-            background: #22c55e;
-        }
+    h1,
+    h2 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif
+    }
 
-        #popup {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ef4444;
-            padding: 15px;
-            border-radius: 10px;
-            display: none;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.3s ease;
-        }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.9rem);
+      line-height: 1;
+      max-width: 11ch;
+      margin-top: 14px
+    }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100px);
-                opacity: 0;
-            }
+    p {
+      color: var(--muted);
+      line-height: 1.65
+    }
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    </style>
+    .hero-copy p {
+      max-width: 60ch
+    }
+
+    .actions,
+    .controls,
+    .api-actions,
+    .stats,
+    .two,
+    .architecture {
+      display: grid;
+      gap: 12px
+    }
+
+    .actions,
+    .controls,
+    .api-actions {
+      display: flex;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .btn:hover {
+      transform: translateY(-2px)
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      color: #042033
+    }
+
+    .secondary {
+      background: rgba(148, 163, 184, .12);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, .18)
+    }
+
+    .danger {
+      background: linear-gradient(135deg, var(--rose), #e11d48);
+      color: #fff
+    }
+
+    .side {
+      display: grid;
+      gap: 14px
+    }
+
+    .ring {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, .72);
+      border: 1px solid rgba(56, 189, 248, .12)
+    }
+
+    .ring strong {
+      display: block;
+      color: #bae6fd;
+      font-size: .95rem;
+      margin-bottom: 8px
+    }
+
+    .ring span {
+      display: block;
+      font: 700 2rem "Space Grotesk", sans-serif
+    }
+
+    .ring small {
+      color: var(--muted)
+    }
+
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 16px
+    }
+
+    .stat,
+    .card,
+    .alert,
+    .node {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, .7);
+      border: 1px solid var(--line)
+    }
+
+    .stat span,
+    .alert span,
+    .card p,
+    .mini {
+      color: var(--muted)
+    }
+
+    .stat strong {
+      display: block;
+      font: 700 1.55rem "Space Grotesk", sans-serif;
+      margin-top: 10px
+    }
+
+    .camera {
+      margin-top: 16px;
+      min-height: 320px;
+      border-radius: 22px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, rgba(2, 6, 23, .1), rgba(2, 6, 23, .7)), url("https://images.unsplash.com/photo-1519567770579-c2fc5d0d37d6?auto=format&fit=crop&w=1400&q=80") center/cover;
+      border: 1px solid var(--line)
+    }
+
+    .scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, .16), transparent);
+      animation: sweep 4s linear infinite
+    }
+
+    .box {
+      position: absolute;
+      inset: 23% 19% 31% 48%;
+      border: 2px solid var(--yellow);
+      border-radius: 14px;
+      box-shadow: 0 0 0 999px rgba(2, 6, 23, .12);
+      animation: pulse 2s infinite
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .chip {
+      padding: 8px 12px;
+      background: rgba(2, 6, 23, .52);
+      border: 1px solid rgba(226, 232, 240, .12);
+      font-size: .88rem
+    }
+
+    .chip.live::before,
+    .chip.ok::before,
+    .chip.warn::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    .chip.live::before {
+      background: var(--rose);
+      box-shadow: 0 0 18px rgba(251, 113, 133, .9)
+    }
+
+    .chip.ok::before {
+      background: var(--green)
+    }
+
+    .chip.warn::before {
+      background: var(--yellow)
+    }
+
+    .two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 16px
+    }
+
+    .alert {
+      display: grid;
+      gap: 6px;
+      border-left: 4px solid transparent
+    }
+
+    .alert.motion {
+      border-left-color: #38bdf8
+    }
+
+    .alert.ai {
+      border-left-color: var(--yellow)
+    }
+
+    .alert.critical {
+      border-left-color: var(--rose)
+    }
+
+    .architecture {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 16px
+    }
+
+    .node {
+      text-align: center;
+      font-weight: 700;
+      background: linear-gradient(160deg, rgba(12, 26, 45, .95), rgba(8, 17, 31, .9));
+      border-color: rgba(56, 189, 248, .14)
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, .18);
+      background: rgba(2, 6, 23, .42);
+      color: var(--text);
+      font: inherit
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .93rem
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, .72);
+      border: 1px solid var(--line);
+      color: var(--muted)
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 320px;
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: rgba(3, 12, 24, .94);
+      border: 1px solid rgba(251, 113, 133, .3);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+      transition: .25s
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    @keyframes sweep {
+      0% {
+        transform: translateY(-100%)
+      }
+
+      100% {
+        transform: translateY(100%)
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .82
+      }
+
+      50% {
+        transform: scale(1.03);
+        opacity: 1
+      }
+    }
+
+    @media (max-width:980px) {
+
+      .hero,
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .stats,
+      .two,
+      .architecture {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    @media (max-width:640px) {
+      .shell {
+        width: min(100% - 16px, 1180px);
+        padding-top: 16px
+      }
+
+      .hero-copy,
+      .section,
+      .side {
+        padding: 18px
+      }
+
+      .stats,
+      .two,
+      .architecture {
+        grid-template-columns: 1fr
+      }
+
+      .camera {
+        min-height: 260px
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <main class="shell">
+    <section class="hero">
+      <article class="panel hero-copy">
+        <span class="eyebrow">AI Security + IoT Automation</span>
+        <h1>SecureMart protects convenience stores in real time.</h1>
+        <p>Detect motion, monitor suspicious activity with AI, auto-lock doors, and send instant alerts to the owner.
+          This dashboard is hackathon-ready and now includes API hooks for sensors, cameras, alerts, and remote control.
+        </p>
+        <div class="actions">
+          <button class="btn primary" id="simulateBtn">Trigger Demo Incident</button>
+          <button class="btn secondary" id="refreshBtn">Refresh Status</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>Motion Events</span><strong id="motionCount">12</strong></div>
+          <div class="stat"><span>AI Flags</span><strong id="aiCount">4</strong></div>
+          <div class="stat"><span>Door Commands</span><strong id="doorCount">8</strong></div>
+          <div class="stat"><span>Response Time</span><strong id="responseTime">3.2s</strong></div>
+        </div>
+      </article>
+      <aside class="panel side">
+        <div class="ring"><strong>Security State</strong><span id="securityState">Armed</span><small
+            id="securitySubtext">Monitoring after-hours activity</small></div>
+        <div class="ring"><strong>Door Status</strong><span id="doorState">Locked</span><small
+            id="doorSubtext">Auto-lock enabled</small></div>
+        <div class="ring"><strong>API Connection</strong><span id="apiConnection">Mock Mode</span><small
+            id="apiSubtext">Connect a backend below to go live</small></div>
+      </aside>
+    </section>
 
-    <h1>🏪 SecureMart Dashboard</h1>
-
-    <div id="popup">🚨 ALERT!</div>
-
-    <div class="grid">
-
-        <!-- Camera -->
-        <div class="card">
-            <h2>📷 Live Camera</h2>
-            <div class="camera-box">
-                <img src="https://via.placeholder.com/600x350" width="100%"
-                    style="border-radius:10px; box-shadow: 0 0 20px red;">
-                <div class="detection-box"></div>
-                <div class="label">Suspicious Activity</div>
+    <section class="layout">
+      <div class="panel section">
+        <h2>Live Camera Feed</h2>
+        <p>Simulated smart camera view with AI threat highlight for your demo presentation.</p>
+        <div class="camera">
+          <div class="scan"></div>
+          <div class="box"></div>
+          <div class="overlay">
+            <div class="row">
+              <span class="chip warn" id="cameraLabel">AI Suspicion: Medium</span>
+              <span class="chip live">REC LIVE</span>
             </div>
+            <div class="row">
+              <span class="chip ok" id="cameraMode">Camera Active</span>
+              <span class="chip" id="lastEvent">Last event: Motion detected</span>
+            </div>
+          </div>
         </div>
-
-        <!-- Alerts -->
-        <div class="card alerts" id="alerts">
-            <h2>🚨 Alerts</h2>
+        <h2 style="margin-top:18px">System Architecture</h2>
+        <p>Motion Sensor to Microcontroller to Cloud API to Owner App to Door and Camera.</p>
+        <div class="architecture">
+          <div class="node">Motion Sensor</div>
+          <div class="node">Microcontroller</div>
+          <div class="node">Cloud API</div>
+          <div class="node">Owner App</div>
+          <div class="node">Door + Camera</div>
         </div>
+      </div>
 
-    </div>
+      <div style="display:grid;gap:18px">
+        <article class="panel section">
+          <h2>Alerts Timeline</h2>
+          <p>Recent detections, AI flags, and owner notifications.</p>
+          <div id="alertsList" style="display:grid;gap:12px;margin-top:16px"></div>
+        </article>
 
-    <!-- Door Control -->
-    <div class="card" style="margin-top:20px;">
-        <h2>🚪 Door Control</h2>
+        <article class="panel section">
+          <h2>Remote Controls</h2>
+          <p>Owner can lock doors, arm alarms, send alerts, and trigger lockdown.</p>
+          <div class="two">
+            <div class="card">
+              <strong>Door Lock</strong>
+              <p id="doorDescription">Main entrance is currently locked.</p>
+              <div class="controls"><button class="btn primary" id="doorToggleBtn">Unlock Door</button></div>
+            </div>
+            <div class="card">
+              <strong>Alarm</strong>
+              <p id="alarmDescription">Alarm is armed and ready for intrusion events.</p>
+              <div class="controls"><button class="btn danger" id="alarmToggleBtn">Disarm Alarm</button></div>
+            </div>
+            <div class="card">
+              <strong>Owner Action</strong>
+              <p>Push an emergency alert and lock the store instantly.</p>
+              <div class="controls">
+                <button class="btn secondary" id="notifyBtn">Send Alert</button>
+                <button class="btn danger" id="lockdownBtn">Lockdown</button>
+              </div>
+            </div>
+            <div class="card">
+              <strong>Hackathon Feature</strong>
+              <p>AI behaviour analysis detects loitering, concealment, and after-hours access.</p>
+            </div>
+          </div>
+          <div class="controls" style="margin-top:16px">
+            <button class="btn secondary" id="storeModeBtn">Switch To Open Mode</button>
+            <button class="btn secondary" id="demoCycleBtn">Run Demo Cycle</button>
+            <button class="btn secondary" id="resetDemoBtn">Reset Demo</button>
+          </div>
+          <p class="mini" id="demoHelper" style="margin-top:12px">Use these controls before your presentation to reset or automate the demo flow.</p>
+        </article>
 
-        <button id="doorBtn" class="locked">Unlock Door</button>
-        <p id="status">Status: Locked 🔒</p>
-    </div>
+        <article class="panel section">
+          <h2>API Integration</h2>
+          <p>Connect a backend and this page will call live endpoints instead of mock data.</p>
+          <div style="display:grid;gap:12px;margin-top:16px">
+            <label>API Base URL<input id="apiBaseUrl" type="text" placeholder="http://localhost:3000"></label>
+            <label>Owner Contact<input id="ownerContact" type="text" value="owner@securemart.ai"></label>
+            <label>Demo Incident Payload<textarea id="incidentPayload">{
+  "type": "ai_suspicious_behavior",
+  "severity": "high",
+  "location": "Checkout Aisle",
+  "storeClosed": true
+}</textarea></label>
+            <div class="api-actions">
+              <button class="btn primary" id="connectApiBtn">Connect API</button>
+              <button class="btn secondary" id="loadAlertsBtn">Load Alerts</button>
+            </div>
+          </div>
+          <div class="status" id="apiStatus">Waiting for connection. Dashboard is currently using local demo data.</div>
+        </article>
+      </div>
+    </section>
+  </main>
 
-    <script>
-        const alertsDiv = document.getElementById("alerts");
-        const popup = document.getElementById("popup");
-        const doorBtn = document.getElementById("doorBtn");
-        const statusText = document.getElementById("status");
+  <div class="toast" id="toast"></div>
 
-        let locked = true;
-
-        // Door control
-        doorBtn.onclick = () => {
-            locked = !locked;
-
-            if (locked) {
-                doorBtn.textContent = "Unlock Door";
-                doorBtn.className = "locked";
-                statusText.textContent = "Status: Locked 🔒";
-            } else {
-                doorBtn.textContent = "Lock Door";
-                doorBtn.className = "unlocked";
-                statusText.textContent = "Status: Unlocked 🔓";
-            }
-        };
-
-        // Simulate alerts
-        setInterval(() => {
-            const isAI = Math.random() > 0.6;
-
-            const message = isAI
-                ? "🤖 Suspicious behaviour detected!"
-                : "Motion detected in store!";
-
-            const time = new Date().toLocaleTimeString();
-
-            const div = document.createElement("div");
-            div.className = "alert " + (isAI ? "ai" : "");
-            div.textContent = `${time} - ${message}`;
-
-            alertsDiv.prepend(div);
-
-            // Show popup
-            popup.textContent = "🚨 " + message;
-            popup.style.display = "block";
-
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 3000);
-
-            // Play sound
-            const audio = new Audio("https://www.soundjay.com/buttons/beep-01a.mp3");
-            audio.play();
-
-        }, 4000);
-    </script>
-
+  <script>
+    const state = {
+      apiBaseUrl: "", apiConnected: false, doorLocked: true, alarmArmed: true, storeClosed: true, securityState: "Armed", demoCycleRunning: false, metrics: { motionCount: 12, aiCount: 4, doorCount: 8, responseTime: "3.2s" }, alerts: [
+        { title: "Motion detected near entrance", detail: "Sensor 01 flagged movement after closing time. Owner notified.", type: "motion", time: new Date(Date.now() - 180000).toLocaleTimeString() },
+        { title: "AI detected suspicious loitering", detail: "Camera model found prolonged presence around the drinks aisle.", type: "ai", time: new Date(Date.now() - 420000).toLocaleTimeString() },
+        { title: "Door auto-locked", detail: "Smart lock engaged because unauthorized motion occurred after hours.", type: "critical", time: new Date(Date.now() - 720000).toLocaleTimeString() }
+      ]
+    };
+    const el = { alertsList: document.getElementById("alertsList"), toast: document.getElementById("toast"), apiStatus: document.getElementById("apiStatus"), apiBaseUrl: document.getElementById("apiBaseUrl"), incidentPayload: document.getElementById("incidentPayload"), ownerContact: document.getElementById("ownerContact"), securityState: document.getElementById("securityState"), securitySubtext: document.getElementById("securitySubtext"), doorState: document.getElementById("doorState"), doorSubtext: document.getElementById("doorSubtext"), apiConnection: document.getElementById("apiConnection"), apiSubtext: document.getElementById("apiSubtext"), motionCount: document.getElementById("motionCount"), aiCount: document.getElementById("aiCount"), doorCount: document.getElementById("doorCount"), responseTime: document.getElementById("responseTime"), cameraLabel: document.getElementById("cameraLabel"), cameraMode: document.getElementById("cameraMode"), lastEvent: document.getElementById("lastEvent"), doorDescription: document.getElementById("doorDescription"), alarmDescription: document.getElementById("alarmDescription"), doorToggleBtn: document.getElementById("doorToggleBtn"), alarmToggleBtn: document.getElementById("alarmToggleBtn"), storeModeBtn: document.getElementById("storeModeBtn"), demoCycleBtn: document.getElementById("demoCycleBtn"), resetDemoBtn: document.getElementById("resetDemoBtn"), demoHelper: document.getElementById("demoHelper") };
+    const defaultApiBase = () => window.location.protocol.startsWith("http") ? window.location.origin : "http://localhost:3000";
+    const toast = (m) => { el.toast.textContent = m; el.toast.classList.add("show"); setTimeout(() => el.toast.classList.remove("show"), 2600) };
+    const pushAlert = (title, detail, type = "motion") => { state.alerts.unshift({ title, detail, type, time: new Date().toLocaleTimeString() }); render() };
+    function render() { el.securityState.textContent = state.securityState; el.securitySubtext.textContent = state.alarmArmed ? "Monitoring after-hours activity" : "Alarm disabled by owner"; el.doorState.textContent = state.doorLocked ? "Locked" : "Unlocked"; el.doorSubtext.textContent = state.doorLocked ? "Auto-lock enabled" : "Manual access open"; el.apiConnection.textContent = state.apiConnected ? "Connected" : "Mock Mode"; el.apiSubtext.textContent = state.apiConnected ? "Live backend is responding" : "Connect a backend below to go live"; el.motionCount.textContent = state.metrics.motionCount; el.aiCount.textContent = state.metrics.aiCount; el.doorCount.textContent = state.metrics.doorCount; el.responseTime.textContent = state.metrics.responseTime; el.cameraLabel.textContent = state.alarmArmed ? "AI Suspicion: Medium" : "AI Suspicion: Low"; el.cameraMode.textContent = state.apiConnected ? "Camera Synced" : "Camera Active"; el.lastEvent.textContent = `Last event: ${state.alerts[0]?.title || "No alerts yet"}`; el.doorDescription.textContent = state.doorLocked ? "Main entrance is currently locked." : "Main entrance is currently unlocked."; el.alarmDescription.textContent = state.alarmArmed ? "Alarm is armed and ready for intrusion events." : "Alarm is disarmed for maintenance or open hours."; el.doorToggleBtn.textContent = state.doorLocked ? "Unlock Door" : "Lock Door"; el.alarmToggleBtn.textContent = state.alarmArmed ? "Disarm Alarm" : "Arm Alarm"; el.storeModeBtn.textContent = state.storeClosed ? "Switch To Open Mode" : "Switch To Closed Mode"; el.demoCycleBtn.textContent = state.demoCycleRunning ? "Stop Demo Cycle" : "Run Demo Cycle"; el.demoHelper.textContent = state.demoCycleRunning ? "Automatic demo mode is running and will keep generating security events." : "Use these controls before your presentation to reset or automate the demo flow."; el.alertsList.innerHTML = ""; state.alerts.slice(0, 6).forEach(a => { const item = document.createElement("article"); item.className = `alert ${a.type}`; item.innerHTML = `<strong>${a.title}</strong><span>${a.detail}</span><span>${a.time}</span>`; el.alertsList.appendChild(item) }) }
+    async function apiFetch(path, options = {}) { if (!state.apiConnected || !state.apiBaseUrl) throw new Error("API not connected"); const res = await fetch(`${state.apiBaseUrl}${path}`, { headers: { "Content-Type": "application/json", ...(options.headers || {}) }, ...options }); if (!res.ok) throw new Error(`Request failed with status ${res.status}`); const type = res.headers.get("content-type") || ""; return type.includes("application/json") ? res.json() : res.text() }
+    async function connectApi() { const base = (el.apiBaseUrl.value.trim() || defaultApiBase()).replace(/\/$/, ""); state.apiBaseUrl = base; el.apiBaseUrl.value = base; if (!base) { state.apiConnected = false; el.apiStatus.textContent = "No API URL entered. Staying in demo mode with local mock actions."; render(); toast("SecureMart is running in demo mode."); return } state.apiConnected = true; el.apiStatus.textContent = "Connecting to backend..."; try { const status = await apiFetch("/api/status", { method: "GET" }); state.doorLocked = status.doorLocked ?? state.doorLocked; state.alarmArmed = status.alarmArmed ?? state.alarmArmed; state.securityState = status.securityState ?? state.securityState; state.storeClosed = status.storeClosed ?? state.storeClosed; if (status.ownerContact) { el.ownerContact.value = status.ownerContact } el.apiStatus.textContent = "Backend connected successfully. Live status sync is active."; toast("API connected successfully.") } catch (error) { state.apiConnected = false; el.apiStatus.textContent = "Connection failed. Expected endpoint: GET /api/status. Demo mode is still available."; toast(error.message) } render() }
+    async function refreshStatus(silent = false) { if (!state.apiConnected) { state.metrics.responseTime = `${(2 + Math.random() * 2).toFixed(1)}s`; render(); if (!silent) { toast("Demo status refreshed.") } return } try { const status = await apiFetch("/api/status", { method: "GET" }); state.metrics.motionCount = status.motionCount ?? state.metrics.motionCount; state.metrics.aiCount = status.aiCount ?? state.metrics.aiCount; state.metrics.doorCount = status.doorCount ?? state.metrics.doorCount; state.metrics.responseTime = status.responseTime ?? state.metrics.responseTime; state.doorLocked = status.doorLocked ?? state.doorLocked; state.alarmArmed = status.alarmArmed ?? state.alarmArmed; state.securityState = status.securityState ?? state.securityState; state.storeClosed = status.storeClosed ?? state.storeClosed; el.apiStatus.textContent = "System status updated from backend."; render(); if (!silent) { toast("Live status refreshed.") } } catch (error) { el.apiStatus.textContent = "Unable to refresh backend state. Demo values remain visible."; if (!silent) { toast(error.message) } } }
+    async function loadAlerts(silent = false) { if (!state.apiConnected) { pushAlert("Demo alert sync completed", "Using local alerts because no live API is connected yet.", "motion"); el.apiStatus.textContent = "Loaded demo alerts. Connect a backend to read real incident logs."; if (!silent) { toast("Demo alerts loaded.") } return } try { const data = await apiFetch("/api/alerts", { method: "GET" }); if (Array.isArray(data) && data.length) { state.alerts = data.map(item => ({ title: item.title || "Security event", detail: item.detail || "No description provided.", type: item.type || "motion", time: item.time || new Date().toLocaleTimeString() })); render(); el.apiStatus.textContent = "Recent alerts loaded from backend."; if (!silent) { toast("Live alerts loaded.") } } } catch (error) { el.apiStatus.textContent = "Expected endpoint: GET /api/alerts. Falling back to current timeline."; if (!silent) { toast(error.message) } } }
+    async function toggleDoor(forceLock) { const nextLocked = typeof forceLock === "boolean" ? forceLock : !state.doorLocked; if (!state.apiConnected) { state.doorLocked = nextLocked; state.metrics.doorCount += 1; pushAlert(nextLocked ? "Door locked remotely" : "Door unlocked remotely", "Owner command executed in demo mode.", "critical"); return } try { const result = await apiFetch("/api/door", { method: "POST", body: JSON.stringify({ locked: nextLocked }) }); state.doorLocked = result.locked ?? nextLocked; state.metrics.doorCount += 1; pushAlert(state.doorLocked ? "Door locked remotely" : "Door unlocked remotely", "Door controller updated through API.", "critical"); el.apiStatus.textContent = "Door action sent to backend successfully." } catch (error) { toast(error.message) } render() }
+    async function toggleAlarm() { const next = !state.alarmArmed; if (!state.apiConnected) { state.alarmArmed = next; state.securityState = next ? "Armed" : "Standby"; pushAlert(next ? "Alarm re-armed" : "Alarm disarmed by owner", "Alarm state changed in demo mode.", "motion"); return } try { const result = await apiFetch("/api/alarm", { method: "POST", body: JSON.stringify({ armed: next }) }); state.alarmArmed = result.alarmArmed ?? next; state.securityState = state.alarmArmed ? "Armed" : "Standby"; pushAlert(state.alarmArmed ? "Alarm re-armed" : "Alarm disarmed by owner", "Alarm controller updated through API.", "motion"); el.apiStatus.textContent = "Alarm action sent to backend successfully." } catch (error) { toast(error.message) } render() }
+    async function sendOwnerAlert() { const contact = el.ownerContact.value.trim() || "owner@securemart.ai"; const payload = { to: contact, message: "ALERT: Motion detected in SecureMart. Camera activated. Door locked." }; if (!state.apiConnected) { pushAlert("Owner alert dispatched", `Demo notification sent to ${contact}.`, "critical"); toast("Demo alert sent."); return } try { await apiFetch("/api/notify", { method: "POST", body: JSON.stringify(payload) }); pushAlert("Owner alert dispatched", `Live notification sent to ${contact}.`, "critical"); el.apiStatus.textContent = "Owner notification sent through backend." } catch (error) { toast(error.message) } }
+    async function simulateIncident() { let payload; try { payload = JSON.parse(el.incidentPayload.value) } catch { toast("Incident payload must be valid JSON."); return } if (!state.apiConnected) { state.metrics.motionCount += 1; state.metrics.aiCount += payload.type?.includes("ai") ? 1 : 0; state.doorLocked = payload.storeClosed ?? true; state.alarmArmed = true; state.securityState = "Threat Detected"; pushAlert("Simulated intrusion detected", `${payload.location || "Store zone"} flagged as ${payload.severity || "high"} severity.`, "critical"); el.apiStatus.textContent = "Demo incident executed locally. Connect a backend to post real incidents."; toast("Demo incident triggered."); return } try { await apiFetch("/api/incidents", { method: "POST", body: JSON.stringify(payload) }); pushAlert("Live incident submitted", "Incident sent to backend and added to the response queue.", "critical"); el.apiStatus.textContent = "Incident posted to backend successfully."; refreshStatus() } catch (error) { toast(error.message) } }
+    async function lockdownStore() { await toggleDoor(true); state.alarmArmed = true; state.securityState = "Lockdown"; pushAlert("Full lockdown engaged", "All smart locks secured and alarm forced into armed mode.", "critical"); render(); toast("Store lockdown activated.") }
+    async function toggleStoreMode() { if (!state.apiConnected) { state.storeClosed = !state.storeClosed; state.securityState = state.storeClosed ? "Armed" : "Open Hours"; render(); toast("Store mode updated in demo mode."); return } try { const result = await apiFetch("/api/store-mode", { method: "POST", body: JSON.stringify({ storeClosed: !state.storeClosed }) }); state.storeClosed = result.storeClosed; state.securityState = result.securityState; el.apiStatus.textContent = "Store mode updated successfully."; await loadAlerts(true); await refreshStatus(true); toast(`Store is now ${state.storeClosed ? "closed" : "open"}.`) } catch (error) { toast(error.message) } }
+    async function toggleDemoCycle() { const next = !state.demoCycleRunning; if (!state.apiConnected) { state.demoCycleRunning = next; render(); toast(next ? "Demo cycle enabled in mock mode." : "Demo cycle stopped."); return } try { await apiFetch("/api/demo-cycle", { method: "POST", body: JSON.stringify({ enabled: next }) }); state.demoCycleRunning = next; el.apiStatus.textContent = next ? "Automatic demo cycle started." : "Automatic demo cycle stopped."; if (next) { await loadAlerts(true); await refreshStatus(true) } render(); toast(next ? "Demo cycle started." : "Demo cycle stopped.") } catch (error) { toast(error.message) } }
+    async function resetDemo() { if (!state.apiConnected) { location.reload(); return } try { await apiFetch("/api/reset", { method: "POST", body: "{}" }); state.demoCycleRunning = false; await loadAlerts(true); await refreshStatus(true); el.apiStatus.textContent = "Demo reset to the starting state."; toast("Demo reset successfully.") } catch (error) { toast(error.message) } }
+    document.getElementById("connectApiBtn").addEventListener("click", connectApi); document.getElementById("refreshBtn").addEventListener("click", () => refreshStatus()); document.getElementById("loadAlertsBtn").addEventListener("click", loadAlerts); document.getElementById("simulateBtn").addEventListener("click", simulateIncident); document.getElementById("doorToggleBtn").addEventListener("click", () => toggleDoor()); document.getElementById("alarmToggleBtn").addEventListener("click", toggleAlarm); document.getElementById("notifyBtn").addEventListener("click", sendOwnerAlert); document.getElementById("lockdownBtn").addEventListener("click", lockdownStore); document.getElementById("storeModeBtn").addEventListener("click", toggleStoreMode); document.getElementById("demoCycleBtn").addEventListener("click", toggleDemoCycle); document.getElementById("resetDemoBtn").addEventListener("click", resetDemo); el.apiBaseUrl.value = defaultApiBase(); render(); if (window.location.protocol.startsWith("http")) { connectApi(); setInterval(() => { if (state.apiConnected) { refreshStatus(true); loadAlerts(true); } }, 7000); }
+  </script>
 </body>
 
 </html>

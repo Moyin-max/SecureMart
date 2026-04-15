@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: securemart
+    runtime: node
+    plan: free
+    region: ohio
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true

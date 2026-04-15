@@ -1,0 +1,10 @@
+{
+  "name": "securemart",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SecureMart smart convenience store security dashboard and API",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node server.js"
+  }
+}
