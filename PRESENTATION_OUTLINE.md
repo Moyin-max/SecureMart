@@ -58,7 +58,7 @@ Talking point:
 
 - HTML, CSS, JavaScript
 - Node.js backend
-- Render deployment
+- Fly.io deployment
 - GitHub version control
 
 Talking point:
@@ -70,12 +70,13 @@ Talking point:
 Demo order:
 
 1. Open the live dashboard
-2. Show API connected state
-3. Click `Reset Demo`
-4. Click `Trigger Demo Incident`
-5. Show alerts and metric updates
-6. Show door lock response
-7. Click `Lockdown` or `Send Alert`
+2. Select `Free Demo` plan for a no-payment safe path
+3. Show API connected state
+4. Click `Reset Demo`
+5. Click `Trigger Demo Incident`
+6. Show alerts and metric updates
+7. Show door lock response
+8. Click `Lockdown` or `Send Alert`
 
 Talking point:
 
@@ -91,6 +92,9 @@ Mention:
 - `POST /api/alarm`
 - `POST /api/notify`
 - `POST /api/incidents`
+- `POST /api/payments/interswitch/initiate`
+- `POST /api/payments/interswitch/card/purchase`
+- `POST /api/payments/interswitch/card/otp-auth`
 
 Talking point:
 
@@ -116,3 +120,7 @@ Points to mention:
 ## Closing Statement
 
 > SecureMart shows how AI and IoT concepts can be applied to solve real retail security problems in an affordable and scalable way.
+
+## Live URL
+
+[https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)

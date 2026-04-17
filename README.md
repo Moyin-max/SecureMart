@@ -3,7 +3,7 @@
 **SecureMart** is a smart AI-powered security system for convenience stores. It combines motion detection, suspicious activity monitoring, smart door control, and owner alerts in a single web dashboard.
 
 Live demo:
-[https://securemart.onrender.com](https://securemart.onrender.com)
+[https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)
 
 Full documentation:
 [PROJECT_DOCUMENTATION.md](C:\Users\MOYIN\Desktop\SecureMart\PROJECT_DOCUMENTATION.md)
@@ -26,6 +26,7 @@ The system allows a store owner to:
 
 - Live dashboard UI
 - API-connected backend
+- Free Demo plan (no payment required)
 - Motion event simulation
 - AI suspicious behavior alerts
 - Remote door lock and unlock
@@ -34,7 +35,9 @@ The system allows a store owner to:
 - Store open and closed mode
 - Automatic demo cycle
 - Resettable presentation state
-- Public deployment on Render
+- Interswitch WebPAY integration (server-signed)
+- Interswitch Card API demo flow (purchase + OTP simulation path)
+- Public deployment on Fly.io
 
 ## Tech Stack
 
@@ -42,7 +45,7 @@ The system allows a store owner to:
 - CSS3
 - Vanilla JavaScript
 - Node.js
-- Render
+- Fly.io
 - GitHub
 
 ## Project Structure
@@ -52,7 +55,8 @@ SecureMart/
 |-- index.html
 |-- server.js
 |-- package.json
-|-- render.yaml
+|-- Dockerfile
+|-- fly.toml
 |-- README.md
 |-- PROJECT_DOCUMENTATION.md
 |-- ONE_PAGE_REPORT.md
@@ -85,15 +89,16 @@ Alternative:
 
 ## Deployment
 
-SecureMart is configured for deployment on Render using [render.yaml](C:\Users\MOYIN\Desktop\SecureMart\render.yaml).
+SecureMart is deployed on Fly.io:
 
-Deployment steps:
+- App URL: [https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)
+- Health URL: [https://securemart-nova-demo.fly.dev/healthz](https://securemart-nova-demo.fly.dev/healthz)
 
-1. Push the repo to GitHub.
-2. Open [Render Dashboard](https://render.com/).
-3. Click `New` then `Blueprint`.
-4. Select the SecureMart repository.
-5. Deploy using the generated service configuration.
+Deploy command:
+
+```bash
+./.fly/bin/flyctl deploy --remote-only -a securemart-nova-demo
+```
 
 Health check endpoint:
 
@@ -105,6 +110,10 @@ Health check endpoint:
 - `GET /healthz`
 - `GET /api/status`
 - `GET /api/alerts`
+- `GET /api/payments/config`
+- `GET /api/payments/interswitch/verify?txRef=...`
+- `POST /api/payments/interswitch/card/purchase`
+- `POST /api/payments/interswitch/card/otp-auth`
 - `POST /api/door`
 - `POST /api/alarm`
 - `POST /api/notify`
@@ -112,16 +121,44 @@ Health check endpoint:
 - `POST /api/store-mode`
 - `POST /api/reset`
 - `POST /api/demo-cycle`
+- `POST /api/payments/interswitch/initiate`
+
+## Security + Payment Setup
+
+Copy `.env.example` into `.env` and set real values:
+
+- `SECUREMART_API_KEY` (required for protected POST endpoints and payment initiation)
+- `ALLOWED_ORIGIN` (set to your exact frontend URL)
+- `INTERSWITCH_MODE=sandbox` for test, `INTERSWITCH_MODE=live` for production
+- `INTERSWITCH_MERCHANT_CODE`, `INTERSWITCH_PAY_ITEM_ID`, `INTERSWITCH_SECRET_KEY`
+- `INTERSWITCH_REDIRECT_URL` (must match value configured in Interswitch)
+- `INTERSWITCH_CLIENT_ID`, `INTERSWITCH_CLIENT_SECRET`
+- `INTERSWITCH_AUTH_BASE_URL`, `INTERSWITCH_CARD_API_BASE_URL`
+- `INTERSWITCH_CARD_DEMO_MODE=true` for reliable demo fallback
+
+Request protected endpoints with header:
+
+- `X-API-Key: <SECUREMART_API_KEY>`
+
+The app now:
+
+- generates Interswitch transaction hashes only on the server (no secret in browser)
+- supports Card API OAuth token flow from backend
+- supports Card API demo OTP flow for pitch-day fallback
+- rate-limits requests
+- checks allowed origin
+- applies secure response headers
 
 ## Quick Demo Flow
 
 1. Open the live dashboard.
-2. Confirm the API shows `Connected`.
-3. Click `Reset Demo`.
-4. Click `Trigger Demo Incident` or `Run Demo Cycle`.
-5. Show the alert timeline and metric updates.
-6. Show door lock, alarm, and lockdown actions.
-7. Explain how the owner can respond remotely.
+2. Choose `Free Demo` plan (or paid plan if gateway is reachable).
+3. Confirm the API shows `Connected`.
+4. Click `Reset Demo`.
+5. Click `Trigger Demo Incident` or `Run Demo Cycle`.
+6. Show the alert timeline and metric updates.
+7. Show door lock, alarm, and lockdown actions.
+8. For payment/API integration, use `Use Card API Demo (No Redirect)` in modal.
 
 ## Additional Project Assets
 

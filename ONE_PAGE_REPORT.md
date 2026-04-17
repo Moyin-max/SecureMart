@@ -43,7 +43,7 @@ SecureMart provides a dashboard-driven security system that:
 - CSS
 - JavaScript
 - Node.js
-- Render
+- Fly.io
 - GitHub
 
 ## Key Features
@@ -55,6 +55,8 @@ SecureMart provides a dashboard-driven security system that:
 - Alarm arm and disarm control
 - Incident logging
 - Demo reset and automatic presentation mode
+- Free Demo plan for no-payment flow
+- Interswitch WebPAY + Card API integration paths
 
 ## Outcome
 
@@ -62,4 +64,4 @@ SecureMart successfully demonstrates a practical smart security workflow for con
 
 ## Live Project
 
-[https://securemart.onrender.com](https://securemart.onrender.com)
+[https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)

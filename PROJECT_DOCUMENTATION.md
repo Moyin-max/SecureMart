@@ -5,7 +5,7 @@
 **SecureMart - Smart AI Security System for Convenience Stores**
 
 Live demo:
-[https://securemart.onrender.com](https://securemart.onrender.com)
+[https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)
 
 ## 2. Project Overview
 
@@ -64,7 +64,10 @@ SecureMart provides a smart, connected security system that:
 - Store open and closed mode
 - Automatic demo cycle for presentation
 - Reset demo state for repeat presentations
-- Public deployment on Render
+- Free Demo plan for non-payment demo path
+- Interswitch WebPAY backend integration
+- Interswitch Card API demo flow (purchase + OTP)
+- Public deployment on Fly.io
 
 ## 7. System Architecture
 
@@ -77,7 +80,7 @@ Motion Sensor -> Microcontroller -> Cloud API -> Web Dashboard -> Door Lock / Ca
 - **Frontend:** single-page HTML, CSS, and JavaScript dashboard
 - **Backend:** Node.js HTTP server
 - **Persistence:** JSON file state storage
-- **Hosting:** Render
+- **Hosting:** Fly.io
 
 ## 8. Technology Stack
 
@@ -85,7 +88,7 @@ Motion Sensor -> Microcontroller -> Cloud API -> Web Dashboard -> Door Lock / Ca
 - CSS3
 - Vanilla JavaScript
 - Node.js
-- Render for deployment
+- Fly.io for deployment
 - GitHub for version control
 
 ## 9. Hardware Components in Real-World Version
@@ -168,7 +171,7 @@ Allows the owner to:
 Base URL:
 
 - Local: `http://localhost:3000`
-- Live: `https://securemart.onrender.com`
+- Live: `https://securemart-nova-demo.fly.dev`
 
 ### `GET /`
 
@@ -210,6 +213,22 @@ Example response:
 ### `GET /api/alerts`
 
 Returns the recent alert list.
+
+### `GET /api/payments/config`
+
+Returns payment integration mode and setup status.
+
+### `POST /api/payments/interswitch/initiate`
+
+Creates signed WebPAY checkout payload on the server.
+
+### `POST /api/payments/interswitch/card/purchase`
+
+Starts Card API purchase flow. In demo mode it returns OTP-required sample response.
+
+### `POST /api/payments/interswitch/card/otp-auth`
+
+Completes OTP auth step. In demo mode it returns approved sample response.
 
 ### `POST /api/door`
 
@@ -298,7 +317,8 @@ SecureMart/
 |-- index.html
 |-- server.js
 |-- package.json
-|-- render.yaml
+|-- Dockerfile
+|-- fly.toml
 |-- README.md
 |-- PROJECT_DOCUMENTATION.md
 |-- start-securemart.bat
@@ -331,9 +351,9 @@ You can also run:
 
 Check these URLs in a browser:
 
-- `https://securemart.onrender.com/healthz`
-- `https://securemart.onrender.com/api/status`
-- `https://securemart.onrender.com/api/alerts`
+- `https://securemart-nova-demo.fly.dev/healthz`
+- `https://securemart-nova-demo.fly.dev/api/status`
+- `https://securemart-nova-demo.fly.dev/api/alerts`
 
 You can also test from the dashboard:
 
@@ -345,15 +365,15 @@ You can also test from the dashboard:
 
 ## 16. Deployment
 
-The project is deployed on Render using:
+The project is deployed on Fly.io using:
 
-- `render.yaml` for service configuration
+- `fly.toml` for service configuration
 - GitHub for source control
-- Node runtime
+- Dockerfile + Node runtime
 
 Live URL:
 
-[https://securemart.onrender.com](https://securemart.onrender.com)
+[https://securemart-nova-demo.fly.dev/](https://securemart-nova-demo.fly.dev/)
 
 ## 17. Limitations
 

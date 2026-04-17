@@ -102,6 +102,25 @@
     pointer-events: none;
   }
   .sub-header { text-align: center; margin-bottom: 36px; position: relative; z-index: 1; }
+  .sub-actions {
+    width: 100%;
+    max-width: 820px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .btn-ghost {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    cursor: pointer;
+  }
   .sub-header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
   .sub-header p { color: var(--muted); font-size: 14px; }
   .plans-grid {
@@ -189,6 +208,29 @@
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn-pay:hover { opacity: 0.88; }
+  .modal-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .modal-actions .btn-ghost {
+    flex: 1 1 120px;
+  }
+  .modal-actions .btn-pay {
+    flex: 2 1 180px;
+  }
+  .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(59,130,246,0.4);
+    background: var(--blue-dim);
+    color: #cbd5ff;
+    font-size: 13px;
+    font-family: var(--sans);
+    cursor: pointer;
+  }
   .pay-secure { text-align: center; color: var(--muted); font-size: 11px; margin-top: 10px; font-family: var(--mono); }
 
   /* ── DASHBOARD ── */
@@ -411,12 +453,29 @@
 
 <!-- ═══════════════════ SUBSCRIPTION PAGE ═══════════════════ -->
 <div class="page" id="sub-page">
+  <div class="sub-actions">
+    <button class="btn-ghost" onclick="goBackFromPlans()">← Back</button>
+  </div>
   <div class="sub-header">
     <div style="font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Choose your plan</div>
     <h1>Protect your store, 24/7</h1>
     <p>Subscribe to activate live IoT sensors, AI threat detection, and remote controls.<br>Powered by Interswitch.</p>
   </div>
   <div class="plans-grid">
+    <div class="plan-card featured" onclick="activateFreePlan()">
+      <div class="plan-badge">Demo Safe</div>
+      <div class="plan-name">Free Demo</div>
+      <div class="plan-price">₦0 <span>/ month</span></div>
+      <div class="plan-desc">Use all core demo features without payment checkout.</div>
+      <ul class="plan-features">
+        <li>Motion + alert simulation</li>
+        <li>Remote door and alarm controls</li>
+        <li>AI incident timeline</li>
+        <li>Live dashboard access now</li>
+      </ul>
+      <button class="btn-plan">Use Free Plan (No Payment)</button>
+    </div>
+
     <div class="plan-card" onclick="openPayModal('Starter', 4900, 'starter')">
       <div class="plan-name">Starter</div>
       <div class="plan-price">₦4,900 <span>/ month</span></div>
@@ -491,9 +550,13 @@
       <input type="hidden" name="transactionreference" id="iswitch-ref" value="">
       <input type="hidden" name="urlredirectpage" value="https://securemart.onrender.com/">
       <input type="hidden" name="hash" id="iswitch-hash" value="">
-      <button type="button" class="btn-pay" onclick="submitPayment()">
-        💳 Pay with Interswitch Webpay
-      </button>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closePayModal()">Cancel</button>
+        <button type="button" class="btn-secondary" onclick="startCardApiDemo()">Use Card API Demo (No Redirect)</button>
+        <button type="button" class="btn-pay" onclick="submitPayment()">
+          💳 Pay with Interswitch Webpay
+        </button>
+      </div>
     </form>
     <div class="pay-secure">🔒 Secured by Interswitch · PCI DSS compliant</div>
   </div>
@@ -705,13 +768,15 @@
 const DEMO_EMAIL = 'admin@securemart.ng';
 const DEMO_PASS  = 'SecureMart@2025';
 
-/* ── INTERSWITCH CONFIG (swap with real sandbox credentials) ── */
+/* ── APP CONFIG ── */
+const API_BASE = window.location.origin;
+const API_KEY = sessionStorage.getItem('sm_api_key') || '';
+
+/* ── INTERSWITCH CONFIG (public values only) ── */
 const IS_CONFIG = {
-  merchantCode: 'MX6072',
-  payItemId: 'Default_Payable_MX6072',
-  clientSecret: 'REPLACEWITHYOURCLIENTSECRET',  // from Interswitch developer portal
-  sandboxURL: 'https://sandbox.interswitchng.com/webpay/v3/paydirect/',
-  redirectURL: 'https://securemart.onrender.com/'
+  merchantCode: 'Configured on server',
+  payItemId: 'Configured on server',
+  sandboxURL: 'https://sandbox.interswitchng.com/webpay/v3/paydirect/'
 };
 
 function showPage(id) {
@@ -727,12 +792,29 @@ function handleLogin() {
     err.style.display = 'none';
     sessionStorage.setItem('sm_auth', 'true');
     sessionStorage.setItem('sm_user', email);
+    if (!sessionStorage.getItem('sm_api_key')) {
+      const enteredApiKey = prompt('Enter API key for protected actions (demo only):') || '';
+      sessionStorage.setItem('sm_api_key', enteredApiKey.trim());
+    }
     showPage('sub-page');
   } else {
     err.style.display = 'block';
   }
 }
 document.getElementById('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
+function goBackFromPlans() {
+  if (sessionStorage.getItem('sm_auth') === 'true') {
+    showPage('dashboard-page');
+    return;
+  }
+  showPage('login-page');
+}
+
+function activateFreePlan() {
+  sessionStorage.setItem('sm_plan', 'free');
+  showPage('dashboard-page');
+}
 
 function logout() {
   sessionStorage.clear();
@@ -743,19 +825,15 @@ function logout() {
 let currentPlan = { name: '', amount: 0 };
 
 function openPayModal(planName, amountNGN, planKey) {
-  currentPlan = { name: planName, amount: amountNGN };
-  const ref = 'SM' + Date.now();
-  const amountKobo = amountNGN * 100;
+  currentPlan = { name: planName, amount: amountNGN, planKey };
 
   document.getElementById('modal-plan-label').textContent = planName + ' Plan — ₦' + amountNGN.toLocaleString() + '/month';
   document.getElementById('modal-plan-name').textContent = planName;
   document.getElementById('modal-amount').textContent = '₦' + amountNGN.toLocaleString();
-  document.getElementById('iswitch-amount').value = amountKobo;
-  document.getElementById('iswitch-ref').value = ref;
-  document.getElementById('show-ref').textContent = ref;
-
-  generateHash(IS_CONFIG.merchantCode, IS_CONFIG.payItemId, ref, amountKobo, IS_CONFIG.redirectURL, IS_CONFIG.clientSecret)
-    .then(hash => { document.getElementById('iswitch-hash').value = hash; });
+  document.getElementById('iswitch-amount').value = String(amountNGN * 100);
+  document.getElementById('iswitch-ref').value = 'Pending...';
+  document.getElementById('show-ref').textContent = 'Pending...';
+  document.getElementById('iswitch-hash').value = '';
 
   document.getElementById('pay-modal').classList.add('open');
 }
@@ -764,28 +842,120 @@ function closePayModal() {
   document.getElementById('pay-modal').classList.remove('open');
 }
 
-async function generateHash(merchantCode, payItemId, txRef, amount, redirectUrl, clientSecret) {
-  const data = merchantCode + payItemId + txRef + String(amount) + redirectUrl;
-  const enc = new TextEncoder();
-  let key;
+async function submitPayment() {
+  const button = document.querySelector('.btn-pay');
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Preparing secure checkout...';
+
+  const form = document.getElementById('interswitchForm');
+  const apiKey = sessionStorage.getItem('sm_api_key') || '';
+  if (!apiKey) {
+    alert('API key is required to initiate payments.');
+    button.disabled = false;
+    button.textContent = originalText;
+    return;
+  }
+
   try {
-    key = await crypto.subtle.importKey('raw', enc.encode(clientSecret), { name: 'HMAC', hash: 'SHA-512' }, false, ['sign']);
-    const sig = await crypto.subtle.sign('HMAC', key, enc.encode(data));
-    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
-  } catch(e) {
-    return 'HASH_ERROR_CHECK_SECRET_KEY';
+    const resp = await fetch(`${API_BASE}/api/payments/interswitch/initiate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({ plan: currentPlan.planKey })
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error(data.error || 'Unable to start payment');
+    }
+
+    form.action = data.actionUrl;
+    const fields = data.fields || {};
+    form.querySelector('[name="merchantcode"]').value = fields.merchantcode || '';
+    form.querySelector('[name="payitemid"]').value = fields.payitemid || '';
+    form.querySelector('[name="amount"]').value = fields.amount || '';
+    form.querySelector('[name="transactionreference"]').value = fields.transactionreference || '';
+    form.querySelector('[name="urlredirectpage"]').value = fields.urlredirectpage || '';
+    form.querySelector('[name="hash"]').value = fields.hash || '';
+
+    document.getElementById('show-mc').textContent = fields.merchantcode || '—';
+    document.getElementById('show-pi').textContent = fields.payitemid || '—';
+    document.getElementById('show-ref').textContent = fields.transactionreference || '—';
+    document.getElementById('iswitch-ref').value = fields.transactionreference || '';
+
+    form.submit();
+  } catch (error) {
+    alert(`Payment setup failed: ${error.message}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
   }
 }
 
-async function submitPayment() {
-  const form = document.getElementById('interswitchForm');
-  const hash = document.getElementById('iswitch-hash').value;
-  if (!hash || hash.includes('ERROR')) {
-    alert('⚠ Hash generation failed. Replace IS_CONFIG.clientSecret with your real Interswitch client secret.');
+async function startCardApiDemo() {
+  const apiKey = sessionStorage.getItem('sm_api_key') || '';
+  if (!apiKey) {
+    alert('API key is required.');
     return;
   }
-  form.action = IS_CONFIG.sandboxURL;
-  form.submit();
+
+  const amount = Number(currentPlan.amount || 1000);
+  const transactionRef = `DEMO-${Date.now()}`;
+
+  try {
+    const purchaseResp = await fetch(`${API_BASE}/api/payments/interswitch/card/purchase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({
+        customerId: '1407002510',
+        amount,
+        currency: 'NGN',
+        transactionRef,
+        authData: 'demo-auth-data'
+      })
+    });
+    const purchaseData = await purchaseResp.json();
+    if (!purchaseResp.ok) {
+      throw new Error(purchaseData.error || 'Card API purchase failed');
+    }
+
+    if (purchaseData.responseCode === 'T0' || purchaseData.nextAction === 'otp_required') {
+      const otp = prompt('Enter OTP (use any 6 digits for demo mode):', '123456');
+      if (!otp) return;
+      const otpResp = await fetch(`${API_BASE}/api/payments/interswitch/card/otp-auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey
+        },
+        body: JSON.stringify({
+          paymentId: purchaseData.paymentId || '474552283',
+          otp,
+          transactionId: purchaseData.transactionRef || transactionRef
+        })
+      });
+      const otpData = await otpResp.json();
+      if (!otpResp.ok) {
+        throw new Error(otpData.error || 'OTP auth failed');
+      }
+      alert(`Card payment approved (${otpData.responseCode || '00'}). Redirecting to dashboard.`);
+      closePayModal();
+      showPage('dashboard-page');
+      return;
+    }
+
+    alert(`Card API response: ${purchaseData.message || purchaseData.responseCode || 'Processed'}`);
+    closePayModal();
+    showPage('dashboard-page');
+  } catch (error) {
+    alert(`Card API error: ${error.message}`);
+  }
 }
 
 /* ── DASHBOARD INTERACTIONS ── */
